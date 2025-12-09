@@ -1,14 +1,21 @@
 // Load environment variables first
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require('fs');
 
-// Load environment variables from .env file in the server directory
+// Load environment variables from .env file in the repo root (if present)
 const envPath = path.resolve(__dirname, '..', '.env');
-const result = dotenv.config({ path: envPath });
 
-if (result.error) {
-  console.error('❌ Error loading .env file:', result.error);
-  process.exit(1);
+if (fs.existsSync(envPath)) {
+  const result = dotenv.config({ path: envPath });
+  if (result.error) {
+    console.error('❌ Error loading .env file:', result.error);
+    process.exit(1);
+  } else {
+    console.log('✅ Loaded .env from', envPath);
+  }
+} else {
+  console.log('ℹ️ .env file not found at', envPath, '- proceeding using process.env (expected in production).');
 }
 
 const express = require("express");
@@ -42,7 +49,6 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve static files
-const fs = require('fs');
 const imagesPath = path.join(__dirname, 'public/images');
 console.log('Serving static files from:', imagesPath);
 app.use('/images', express.static(imagesPath, {
