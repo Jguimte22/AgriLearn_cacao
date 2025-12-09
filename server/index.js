@@ -7,12 +7,27 @@ const fs = require('fs');
 const envPath = path.resolve(__dirname, '..', '.env');
 
 if (fs.existsSync(envPath)) {
-  const result = dotenv.config({ path: envPath });
-  if (result.error) {
-    console.error('❌ Error loading .env file:', result.error);
-    process.exit(1);
-  } else {
-    console.log('✅ Loaded .env from', envPath);
+  try {
+    const result = dotenv.config({ path: envPath });
+    if (result.error) {
+      // If dotenv returns an error, ignore ENOENT (file-not-found) and continue.
+      if (result.error.code === 'ENOENT') {
+        console.log('ℹ️ .env file disappeared before it could be read:', envPath);
+      } else {
+        console.error('❌ Error loading .env file:', result.error);
+        process.exit(1);
+      }
+    } else {
+      console.log('✅ Loaded .env from', envPath);
+    }
+  } catch (err) {
+    // Some versions/environments may cause dotenv to throw; handle ENOENT gracefully.
+    if (err && err.code === 'ENOENT') {
+      console.log('ℹ️ .env file not found when attempting to read:', envPath);
+    } else {
+      console.error('❌ Unexpected error while loading .env:', err);
+      process.exit(1);
+    }
   }
 } else {
   console.log('ℹ️ .env file not found at', envPath, '- proceeding using process.env (expected in production).');
