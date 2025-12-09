@@ -106,13 +106,30 @@ app.get('/test-static', (req, res) => {
 // Connect to MongoDB Atlas
 const uri = process.env.MONGODB_URI;
 
+function maskConnectionString(u) {
+  if (!u) return '<<empty>>';
+  try {
+    // Mask password between : and @ if present
+    return u.replace(/:(?:[^:@]+)@/, ':***@');
+  } catch (e) {
+    return u.slice(0, 40) + (u.length > 40 ? '...' : '');
+  }
+}
+
 if (!uri) {
-  console.error('❌ MONGODB_URI is not defined in .env file');
+  console.error('❌ MONGODB_URI is not defined. Set the environment variable in Render or .env');
+  process.exit(1);
+}
+
+// Validate scheme to provide a clearer error if misconfigured in the host dashboard
+if (!(uri.startsWith('mongodb://') || uri.startsWith('mongodb+srv://'))) {
+  console.error('❌ Invalid MONGODB_URI scheme. Expected connection string starting with "mongodb://" or "mongodb+srv://"');
+  console.error('   Value preview:', maskConnectionString(uri));
   process.exit(1);
 }
 
 console.log('Connecting to MongoDB...');
-console.log('Connection string:', uri.replace(/:[^:]*@/, ':***@')); // Hide password in logs
+console.log('Connection string:', maskConnectionString(uri)); // Hide password in logs
 
 mongoose.connect(uri, {
   serverSelectionTimeoutMS: 5000,
