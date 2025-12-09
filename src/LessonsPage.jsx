@@ -421,42 +421,6 @@ const courses = {
         ]
       }
     ]
-  },
-  'cloning-techniques': {
-    id: 'cloning-techniques',
-    title: 'Cacao Cloning Techniques',
-    description: 'Master advanced cloning methods for superior cacao propagation and genetic preservation.',
-    duration: '3 modules · 40 mins',
-    level: 'Advanced',
-    modules: [
-      {
-        id: 'module-24',
-        title: 'Why Clone Cacao',
-        description: 'Understanding the benefits and principles of cacao cloning.',
-        lessons: [
-          { id: 'why-clone-cacao', title: 'Benefits of Cloning in Cacao' },
-          { id: 'cloning-basics', title: 'Cloning Fundamentals' }
-        ]
-      },
-      {
-        id: 'module-25',
-        title: 'Cloning Methods',
-        description: 'Different techniques for cacao propagation.',
-        lessons: [
-          { id: 'cloning-methods-overview', title: 'Advanced Propagation Techniques' },
-          { id: 'grafting-techniques', title: 'Grafting Methods' }
-        ]
-      },
-      {
-        id: 'module-26',
-        title: 'Nursery Management',
-        description: 'Managing cloned plants in the nursery.',
-        lessons: [
-          { id: 'nursery-establishment', title: 'Nursery Establishment' },
-          { id: 'acclimatization', title: 'Plant Acclimatization' }
-        ]
-      }
-    ]
   }
 };
 
